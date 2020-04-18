@@ -1,8 +1,8 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect } from "react";
 import styled from "styled-components";
-import publicIp from "public-ip";
+import { useObserver } from "mobx-react";
 
-import requestWeatherServer from "../lib/requestWeatherServer";
+import useStore from "../hooks/useStore";
 
 import { ReactComponent as Sun } from "../images/day.svg";
 
@@ -13,6 +13,7 @@ const CurrentWeatherContainer = styled.div`
 const LocationWrapper = styled.div`
   display: flex;
   align-items: center;
+  height: 40px;
   padding-bottom: 20px;
   border-bottom: 1px solid black;
 `;
@@ -56,6 +57,7 @@ interface ITextProps {
   weight?: string;
 }
 const Text = styled.p<ITextProps>`
+  height: ${({ size }): string => size || "18px"};
   padding: ${({ padding }): string | null => padding || null};
   margin: ${({ margin }): string | null => margin || null};
   color: ${({ color }): string => color || "black"};
@@ -71,69 +73,29 @@ const WeatherOptionWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  height: 40px;
   padding-top: 20px;
   border-top: 1px solid black;
 `;
 
-interface IWeather {
-  city?: string;
-  temp?: number;
-  yesterday_temp?: number;
-  sky?: number;
-  pty?: number;
-  pop?: number;
-  rn1?: number;
-  humidity?: number;
-  pm10?: string;
-  pm25?: string;
-  hour?: string;
-  weather_date?: string;
-}
+const useCurrentWeatherData = () => {
+  const { weatherStore } = useStore();
 
-interface ILocation {
-  ip?: string;
-  city?: string;
-  country?: string;
-  code?: string;
-  r1?: string;
-  r2?: string;
-  r3?: string;
-  lat?: number;
-  long?: number;
-  net?: string;
-}
+  return useObserver(() => ({
+    getCurrentWeather: weatherStore.getCurrentWeather,
+    weather: weatherStore.weather,
+    location: weatherStore.location,
+  }));
+};
 
 const CurrentWeather: FC = () => {
-  const [weather, setWeather] = useState<IWeather>({});
-  const [location, setLocation] = useState<ILocation>({});
-
-  const getCurrentWeather = async () => {
-    try {
-      const ip = await publicIp.v4();
-      const response = await requestWeatherServer({
-        method: "get",
-        url: "weather",
-        params: {
-          ip,
-        },
-      });
-
-      const { weather, location } = response.data;
-
-      console.log("weather", weather);
-      console.log("location", location);
-
-      setWeather(weather);
-      setLocation(location);
-    } catch (error) {
-      console.error(`[current weather request FAIL][${error.message}]`);
-      console.error(error.stack);
-    }
-  };
+  const { getCurrentWeather, weather, location } = useCurrentWeatherData();
 
   useEffect(() => {
     getCurrentWeather();
-  }, []);
+  }, [getCurrentWeather]);
+
+  console.log("render");
 
   return (
     <CurrentWeatherContainer>
