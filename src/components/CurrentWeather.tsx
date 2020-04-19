@@ -1,21 +1,21 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useObserver } from "mobx-react";
 
 import useStore from "../hooks/useStore";
 
+import Text from "./common/Text";
 import WeatherIcon from "./WeatherIcon";
+import Forecast from "./Forecast";
 
-const CurrentWeatherContainer = styled.div`
-  padding: 20px;
-`;
+const CurrentWeatherContainer = styled.div``;
 
 const LocationWrapper = styled.div`
   display: flex;
   align-items: center;
-  height: 40px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid black;
+  height: 60px;
+  padding: 20px;
+  border-bottom: 1px solid #e1e1e1;
 `;
 
 const ContentWrapper = styled.div`
@@ -48,6 +48,7 @@ interface ITextProps {
   size?: string;
   weight?: string;
 }
+
 const Text = styled.span<ITextProps>`
   height: ${({ size }): string => size || "18px"};
   padding: ${({ padding }): string | null => padding || null};
@@ -61,10 +62,19 @@ const Text = styled.span<ITextProps>`
 const WeatherOptionWrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  height: 40px;
-  padding-top: 20px;
-  border-top: 1px solid black;
+  justify-content: space-between;
+  height: 60px;
+  padding: 20px;
+  border-top: 1px solid #e1e1e1;
+`;
+
+interface IWeatherOptionTextProps {
+  selected?: boolean;
+}
+const WeatherOptionText = styled(Text)<IWeatherOptionTextProps>`
+  cursor: pointer;
+
+  color: ${({ selected }): string => (selected ? "black" : "darkgray")};
 `;
 
 const useCurrentWeatherData = () => {
@@ -72,6 +82,7 @@ const useCurrentWeatherData = () => {
 
   return useObserver(() => ({
     getCurrentWeather: weatherStore.getCurrentWeather,
+    getForecast: weatherStore.getForecast,
     city: weatherStore.city,
     temp: weatherStore.temp,
     yesterdayTemp: weatherStore.yesterdayTemp,
@@ -105,12 +116,17 @@ const CurrentWeather: FC = () => {
     r3,
     hour,
   } = useCurrentWeatherData();
+  const [weatherOption, setWeatherOption] = useState<string | null>(null);
 
   useEffect(() => {
     getCurrentWeather();
   }, [getCurrentWeather]);
 
-  console.log("render");
+  const handleSelectWeatherOption = (e: React.SyntheticEvent<HTMLElement, MouseEvent>): void => {
+    const { value } = e.currentTarget.dataset;
+
+    setWeatherOption(value || null);
+  };
 
   return (
     <CurrentWeatherContainer>
@@ -170,22 +186,51 @@ const CurrentWeather: FC = () => {
               미세먼지
             </Text>
             <Text margin="0 10px 0 0" weight="700">
-              {pm10}
+              {pm10}pm
             </Text>
             <Text color="gray" margin="0 8px 0 0">
               초미세먼지
             </Text>
-            <Text weight="700">{pm25}</Text>
+            <Text weight="700">{pm25}pm</Text>
           </Row>
         </WeatherInfoWrapper>
       </ContentWrapper>
       <WeatherOptionWrapper>
+        <WeatherOptionText
+          data-value="tomorrow"
+          selected={weatherOption === "tomorrow"}
+          onClick={handleSelectWeatherOption}
+        >
+          내일
+        </WeatherOptionText>
         <Row>
-          <Text margin="0 10px 0 0">기온</Text>
-          <Text margin="0 10px 0 0">강수</Text>
-          <Text>습도</Text>
+          <WeatherOptionText
+            data-value="temp"
+            selected={weatherOption === "temp"}
+            margin="0 10px 0 0"
+            onClick={handleSelectWeatherOption}
+          >
+            기온
+          </WeatherOptionText>
+          <WeatherOptionText
+            data-value="rain"
+            selected={weatherOption === "rain"}
+            margin="0 10px 0 0"
+            onClick={handleSelectWeatherOption}
+          >
+            강수
+          </WeatherOptionText>
+          <WeatherOptionText
+            data-value="humid"
+            selected={weatherOption === "humid"}
+            onClick={handleSelectWeatherOption}
+          >
+            습도
+          </WeatherOptionText>
         </Row>
       </WeatherOptionWrapper>
+
+      {weatherOption && <Forecast option={weatherOption} />}
     </CurrentWeatherContainer>
   );
 };
