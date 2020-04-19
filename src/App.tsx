@@ -6,7 +6,6 @@ import CurrentWeather from "./components/CurrentWeather";
 const AppContainer = styled.div`
   width: 500px;
   min-height: 300px;
-  border: 1px solid black;
 `;
 
 const App: FC = () => {
