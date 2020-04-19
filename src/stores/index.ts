@@ -31,6 +31,14 @@ interface ILocation {
   net: string;
 }
 
+interface IForecast {
+  categories: string[];
+  rainProbData: number[];
+  humidityData: number[];
+  tempData: number[];
+  condition: number[][];
+}
+
 class Store {
   @observable public city: string = "";
   @observable public temp: number = 0;
@@ -46,6 +54,12 @@ class Store {
   @observable public r1: string = "";
   @observable public r2: string = "";
   @observable public r3: string = "";
+
+  @observable public categories: string[] = [];
+  @observable public rainProbData: number[] = [];
+  @observable public humidityData: number[] = [];
+  @observable public tempData: number[] = [];
+  @observable public condition: number[][] = [];
 
   @action
   getCurrentWeather = async () => {
@@ -82,8 +96,39 @@ class Store {
         this.r3 = r3;
         this.hour = hour;
       });
+
+      this.getForecast();
     } catch (error) {
       console.error(`[current weather request FAIL][${error.message}]`);
+      console.error(error.stack);
+    }
+  };
+
+  @action
+  getForecast = async () => {
+    try {
+      const ip = await publicIp.v4();
+      const response: AxiosResponse<IForecast> = await requestWeatherServer({
+        method: "get",
+        url: "forecast",
+        params: {
+          ip,
+        },
+      });
+
+      if (!response.data) throw new Error("empty data");
+
+      const { categories, rainProbData, humidityData, tempData, condition } = response.data;
+
+      runInAction(() => {
+        this.categories = categories;
+        this.rainProbData = rainProbData;
+        this.humidityData = humidityData;
+        this.tempData = tempData;
+        this.condition = condition;
+      });
+    } catch (error) {
+      console.error(`[forecast request FAIL][${error.message}]`);
       console.error(error.stack);
     }
   };
