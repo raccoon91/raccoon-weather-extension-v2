@@ -58,7 +58,6 @@ interface XAxisProps {
 }
 
 const CustomizedAxisTick = (props: XAxisProps): JSX.Element => {
-  console.log(props);
   const { x, y, payload } = props;
 
   return (
