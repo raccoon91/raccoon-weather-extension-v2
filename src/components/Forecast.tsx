@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import styled from "styled-components";
 import { useObserver } from "mobx-react";
-import { LineChart, Line, XAxis, CartesianGrid, Tooltip, Legend } from "recharts";
+import { LineChart, Line, XAxis, CartesianGrid, Tooltip } from "recharts";
 
 import useStore from "../hooks/useStore";
 
@@ -9,14 +9,15 @@ import WeatherIcon from "./WeatherIcon";
 
 const ForecastContainer = styled.div`
   width: 100%;
-  min-height: 200px;
-  border: 1px solid black;
+  min-height: 180px;
+  border-top: 1px solid #e1e1e1;
 `;
 
 const WeatherIconWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: 48px;
 `;
 
 const useForecastData = () => {
@@ -28,6 +29,11 @@ const useForecastData = () => {
     humidityData: weatherStore.humidityData,
     tempData: weatherStore.tempData,
     condition: weatherStore.condition,
+    tomorrowCategories: weatherStore.tomorrowCategories,
+    tomorrowRainProbData: weatherStore.tomorrowRainProbData,
+    tomorrowHumidityData: weatherStore.tomorrowHumidityData,
+    tomorrowTempData: weatherStore.tomorrowTempData,
+    tomorrowCondition: weatherStore.tomorrowCondition,
   }));
 };
 
@@ -47,17 +53,36 @@ interface IForecastProps {
   option: string;
 }
 const Forecast: FC<IForecastProps> = ({ option }) => {
-  const { categories, rainProbData, humidityData, tempData, condition } = useForecastData();
+  const {
+    categories,
+    rainProbData,
+    humidityData,
+    tempData,
+    condition,
+    tomorrowCategories,
+    tomorrowRainProbData,
+    tomorrowHumidityData,
+    tomorrowTempData,
+    tomorrowCondition,
+  } = useForecastData();
 
-  const forecastData = categories.map((hour: string, index: number) => {
-    const data: { name: string; value?: number } = { name: hour };
+  const categoryList = option === "tomorrow" ? tomorrowCategories : categories;
+  const conditionList = option === "tomorrow" ? tomorrowCondition : condition;
+  const forecastLineColor = option === "temp" ? "#2ECC40" : option === "rain" ? "#0074D9" : "#AAAAAA";
 
-    if (option === "temp") {
-      data.value = tempData[index];
+  const forecastData = categoryList.map((hour: string, index: number) => {
+    const data: { name: string; value?: number; temp?: number; rain?: number; humid?: number } = { name: hour };
+
+    if (option === "tomorrow") {
+      data.temp = tomorrowTempData[index];
+      data.rain = tomorrowRainProbData[index];
+      data.humid = tomorrowHumidityData[index];
     } else if (option === "rain") {
       data.value = rainProbData[index];
-    } else {
+    } else if (option === "humid") {
       data.value = humidityData[index];
+    } else {
+      data.value = tempData[index];
     }
 
     return data;
@@ -65,16 +90,33 @@ const Forecast: FC<IForecastProps> = ({ option }) => {
 
   return (
     <ForecastContainer>
-      <LineChart width={500} height={180} data={forecastData} margin={{ top: 5, right: 24, left: 24 }}>
+      <LineChart width={500} height={180} data={forecastData} margin={{ top: 24, right: 24, left: 24 }}>
         <XAxis dataKey="name" axisLine={false} tick={<CustomizedAxisTick />} />
         <CartesianGrid strokeDasharray="3 3" />
         <Tooltip />
-        <Legend verticalAlign="top" height={36} />
-        <Line type="monotone" dataKey="value" stroke="#8884d8" activeDot={{ r: 8 }} animationDuration={500} />
+
+        {option === "tomorrow" && (
+          <Line type="monotone" dataKey="temp" stroke="#2ECC40" activeDot={{ r: 8 }} animationDuration={500} />
+        )}
+        {option === "tomorrow" && (
+          <Line type="monotone" dataKey="rain" stroke="#0074D9" activeDot={{ r: 8 }} animationDuration={500} />
+        )}
+        {option === "tomorrow" && (
+          <Line type="monotone" dataKey="humid" stroke="#AAAAAA" activeDot={{ r: 8 }} animationDuration={500} />
+        )}
+        {option !== "tomorrow" && (
+          <Line
+            type="monotone"
+            dataKey="value"
+            stroke={forecastLineColor}
+            activeDot={{ r: 8 }}
+            animationDuration={500}
+          />
+        )}
       </LineChart>
       <WeatherIconWrapper>
-        {condition.map((weatherCondition: number[], index: number) => {
-          const [sky, pty] = weatherCondition;
+        {conditionList.map((condition: number[], index: number) => {
+          const [sky, pty] = condition;
 
           return <WeatherIcon key={index} sky={sky} pty={pty} hour={categories[index]} size="48px" />;
         })}

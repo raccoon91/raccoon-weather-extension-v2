@@ -61,6 +61,12 @@ class Store {
   @observable public tempData: number[] = [];
   @observable public condition: number[][] = [];
 
+  @observable public tomorrowCategories: string[] = [];
+  @observable public tomorrowRainProbData: number[] = [];
+  @observable public tomorrowHumidityData: number[] = [];
+  @observable public tomorrowTempData: number[] = [];
+  @observable public tomorrowCondition: number[][] = [];
+
   @action
   getCurrentWeather = async () => {
     try {
@@ -97,7 +103,8 @@ class Store {
         this.hour = hour;
       });
 
-      this.getForecast();
+      await this.getForecast();
+      await this.getTomorrow();
     } catch (error) {
       console.error(`[current weather request FAIL][${error.message}]`);
       console.error(error.stack);
@@ -129,6 +136,35 @@ class Store {
       });
     } catch (error) {
       console.error(`[forecast request FAIL][${error.message}]`);
+      console.error(error.stack);
+    }
+  };
+
+  @action
+  getTomorrow = async () => {
+    try {
+      const ip = await publicIp.v4();
+      const response: AxiosResponse<IForecast> = await requestWeatherServer({
+        method: "get",
+        url: "tomorrow",
+        params: {
+          ip,
+        },
+      });
+
+      if (!response.data) throw new Error("empty data");
+
+      const { categories, rainProbData, humidityData, tempData, condition } = response.data;
+
+      runInAction(() => {
+        this.tomorrowCategories = categories;
+        this.tomorrowRainProbData = rainProbData;
+        this.tomorrowHumidityData = humidityData;
+        this.tomorrowTempData = tempData;
+        this.tomorrowCondition = condition;
+      });
+    } catch (error) {
+      console.error(`[tomorrow request FAIL][${error.message}]`);
       console.error(error.stack);
     }
   };
