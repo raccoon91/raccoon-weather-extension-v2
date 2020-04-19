@@ -20,6 +20,7 @@ interface IWeatherIconContainerProps {
 }
 const WeatherIconContainer = styled.div<IWeatherIconContainerProps>`
   transform: scale(1.5);
+  pointer-events: none;
 
   svg {
     width: ${({ size }): string => size || "64px"};
