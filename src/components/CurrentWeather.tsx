@@ -4,7 +4,7 @@ import { useObserver } from "mobx-react";
 
 import useStore from "../hooks/useStore";
 
-import { ReactComponent as Sun } from "../images/day.svg";
+import WeatherIcon from "./WeatherIcon";
 
 const CurrentWeatherContainer = styled.div`
   padding: 20px;
@@ -22,15 +22,6 @@ const ContentWrapper = styled.div`
   display: flex;
 `;
 
-const ImageWrapper = styled.div`
-  transform: scale(1.5);
-
-  svg {
-    width: 180px;
-    height: 180px;
-  }
-`;
-
 const WeatherInfoWrapper = styled.div`
   display: flex;
   flex: 1;
@@ -46,6 +37,7 @@ interface IRowProps {
 }
 const Row = styled.div<IRowProps>`
   display: flex;
+  align-items: center;
   margin-top: ${({ marginTop }): string | null => marginTop || null};
 `;
 
@@ -56,17 +48,14 @@ interface ITextProps {
   size?: string;
   weight?: string;
 }
-const Text = styled.p<ITextProps>`
+const Text = styled.span<ITextProps>`
   height: ${({ size }): string => size || "18px"};
   padding: ${({ padding }): string | null => padding || null};
   margin: ${({ margin }): string | null => margin || null};
   color: ${({ color }): string => color || "black"};
   font-size: ${({ size }): string => size || "18px"};
   font-weight: ${({ weight }): string => weight || "400"};
-`;
-
-const Bold = styled.span`
-  font-weight: 700;
+  line-height: ${({ size }): string => size || "18px"};
 `;
 
 const WeatherOptionWrapper = styled.div`
@@ -83,13 +72,41 @@ const useCurrentWeatherData = () => {
 
   return useObserver(() => ({
     getCurrentWeather: weatherStore.getCurrentWeather,
-    weather: weatherStore.weather,
-    location: weatherStore.location,
+    city: weatherStore.city,
+    temp: weatherStore.temp,
+    yesterdayTemp: weatherStore.yesterdayTemp,
+    sky: weatherStore.sky,
+    pty: weatherStore.pty,
+    pop: weatherStore.pop,
+    rn1: weatherStore.rn1,
+    humidity: weatherStore.humidity,
+    pm10: weatherStore.pm10,
+    pm25: weatherStore.pm25,
+    r1: weatherStore.r1,
+    r2: weatherStore.r2,
+    r3: weatherStore.r3,
+    hour: weatherStore.hour,
   }));
 };
 
 const CurrentWeather: FC = () => {
-  const { getCurrentWeather, weather, location } = useCurrentWeatherData();
+  const {
+    getCurrentWeather,
+    city,
+    temp,
+    yesterdayTemp,
+    sky,
+    pty,
+    pop,
+    rn1,
+    humidity,
+    pm10,
+    pm25,
+    r1,
+    r2,
+    r3,
+    hour,
+  } = useCurrentWeatherData();
 
   useEffect(() => {
     getCurrentWeather();
@@ -100,53 +117,76 @@ const CurrentWeather: FC = () => {
   return (
     <CurrentWeatherContainer>
       <LocationWrapper>
-        <Text weight="700" margin="0 8px 0 0">
-          {location.city}
+        <Text weight="700" margin="0 10px 0 0">
+          {city}
         </Text>
-        <Text weight="700" margin="0 8px 0 0">
-          {location.r2}
+        <Text weight="700" margin="0 10px 0 0">
+          {r2}
         </Text>
-        <Text weight="700">{location.r3}</Text>
+        <Text weight="700">{r3}</Text>
       </LocationWrapper>
       <ContentWrapper>
-        <ImageWrapper>
-          <Sun />
-        </ImageWrapper>
+        <WeatherIcon sky={sky} pty={pty} hour={hour} size="180px" />
         <WeatherInfoWrapper>
-          <Text size="36px" weight="700">
-            {weather.city}
-          </Text>
-          <Row marginTop="10px">
-            <Text>
-              기온 <Bold>{weather.temp}°</Bold>C
+          <Row>
+            <Text size="36px" weight="700">
+              {city}
             </Text>
-            {weather.temp && weather.yesterday_temp && (
-              <Text>
-                어제보다 <Bold>{weather.temp - weather.yesterday_temp}°C</Bold>
-              </Text>
+          </Row>
+          <Row marginTop="10px">
+            <Text color="gray" margin="0 8px 0 0">
+              기온
+            </Text>
+            <Text margin="0 10px 0 0" weight="700">
+              {temp}°C
+            </Text>
+            {temp && yesterdayTemp && (
+              <Row>
+                <Text color="gray" margin="0 8px 0 0">
+                  어제보다
+                </Text>
+                <Text weight="700">{(temp - yesterdayTemp).toFixed(1)}°C</Text>
+              </Row>
             )}
           </Row>
           <Row marginTop="8px">
-            <Text margin="0 8px 0 0">
-              강수 확률 <Bold>{weather.pop}%</Bold>
+            <Text color="gray" margin="0 8px 0 0">
+              강수 확률
             </Text>
-            <Text>
-              강수량 <Bold>{weather.rn1}mm</Bold>
+            <Text margin="0 10px 0 0" weight="700">
+              {pop}%
             </Text>
+            <Text color="gray" margin="0 8px 0 0">
+              강수량
+            </Text>
+            <Text weight="700">{rn1}mm</Text>
           </Row>
-          <Text margin="8px 0 0">
-            습도 <Bold>{weather.humidity}%</Bold>
-          </Text>
           <Row marginTop="8px">
-            <Text margin="0 8px 0 0">미세먼지 {weather.pm10}</Text>
-            <Text>초미세먼지 {weather.pm25}</Text>
+            <Text color="gray" margin="0 8px 0 0">
+              습도
+            </Text>
+            <Text weight="700">{humidity}%</Text>
+          </Row>
+          <Row marginTop="8px">
+            <Text color="gray" margin="0 8px 0 0">
+              미세먼지
+            </Text>
+            <Text margin="0 10px 0 0" weight="700">
+              {pm10}
+            </Text>
+            <Text color="gray" margin="0 8px 0 0">
+              초미세먼지
+            </Text>
+            <Text weight="700">{pm25}</Text>
           </Row>
         </WeatherInfoWrapper>
       </ContentWrapper>
       <WeatherOptionWrapper>
-        <Text margin="0 8px 0 0">기온</Text>
-        <Text margin="0 8px 0 0">강수</Text>
-        <Text>습도</Text>
+        <Row>
+          <Text margin="0 10px 0 0">기온</Text>
+          <Text margin="0 10px 0 0">강수</Text>
+          <Text>습도</Text>
+        </Row>
       </WeatherOptionWrapper>
     </CurrentWeatherContainer>
   );
