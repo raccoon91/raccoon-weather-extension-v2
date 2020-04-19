@@ -4,7 +4,6 @@ import { useObserver } from "mobx-react";
 
 import useStore from "../hooks/useStore";
 
-import Text from "./common/Text";
 import WeatherIcon from "./WeatherIcon";
 import Forecast from "./Forecast";
 
@@ -48,7 +47,6 @@ interface ITextProps {
   size?: string;
   weight?: string;
 }
-
 const Text = styled.span<ITextProps>`
   height: ${({ size }): string => size || "18px"};
   padding: ${({ padding }): string | null => padding || null};

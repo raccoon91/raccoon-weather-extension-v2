@@ -37,13 +37,34 @@ const useForecastData = () => {
   }));
 };
 
-const CustomizedAxisTick = ({ x, y, payload }: any): JSX.Element => {
-  const { value } = payload;
+interface XAxisProps {
+  textAnchor?: string;
+  verticalAnchor?: string;
+  width?: number;
+  height?: number;
+  x?: number;
+  y?: number;
+  stroke?: string;
+  fill?: string;
+  index?: number;
+  payload?: {
+    coordinate?: number;
+    value?: string;
+    index?: number;
+    offset?: number;
+    tickCoord?: number;
+    isShow?: boolean;
+  };
+}
+
+const CustomizedAxisTick = (props: XAxisProps): JSX.Element => {
+  console.log(props);
+  const { x, y, payload } = props;
 
   return (
     <g transform={`translate(${x},${y})`}>
       <text x={16} y={0} dy={16} textAnchor="end" fill="#666">
-        {value}시
+        {payload && payload.value}시
       </text>
     </g>
   );
