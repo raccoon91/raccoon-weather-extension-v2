@@ -17,6 +17,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
+    "recharts": "^1.8.5",
     "styled-components": "^5.1.0",
     "typescript": "~3.7.2"
   },
@@ -42,6 +43,7 @@
     ]
   },
   "devDependencies": {
+    "@types/recharts": "^1.8.9",
     "@types/styled-components": "^5.0.1",
     "@typescript-eslint/eslint-plugin": "^2.27.0",
     "@typescript-eslint/parser": "^2.27.0",
