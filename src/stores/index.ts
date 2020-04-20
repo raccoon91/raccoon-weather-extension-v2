@@ -40,6 +40,7 @@ interface IForecast {
 }
 
 class Store {
+  @observable public weatherOption: string | null = null;
   @observable public city: string = "";
   @observable public temp: number = 0;
   @observable public yesterdayTemp: number = 0;
@@ -66,6 +67,11 @@ class Store {
   @observable public tomorrowHumidityData: number[] = [];
   @observable public tomorrowTempData: number[] = [];
   @observable public tomorrowCondition: number[][] = [];
+
+  @action
+  setWeatherOption = (option: string | null) => {
+    this.weatherOption = option;
+  };
 
   @action
   getCurrentWeather = async () => {
