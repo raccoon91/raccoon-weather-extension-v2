@@ -1,6 +1,8 @@
 const getWeatherCondition = (sky: number, pty: number, hour: string): string => {
   const hourCondition = Number(hour) <= 6 && Number(hour) < 18 ? "day" : "night";
 
+  if (sky + pty === 0) return "";
+
   if (pty === 1 || pty === 2) {
     return `rainy-${hourCondition}`;
   } else if (pty === 3) {
@@ -10,7 +12,7 @@ const getWeatherCondition = (sky: number, pty: number, hour: string): string => 
   }
 
   if (sky === 2 || sky === 3) {
-    return `cloud-${hourCondition}`;
+    return `cloudy-${hourCondition}`;
   } else if (sky === 4) {
     return "foggy";
   }
