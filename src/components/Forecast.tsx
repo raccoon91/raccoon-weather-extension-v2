@@ -1,5 +1,5 @@
-import React, { FC } from "react";
-import styled from "styled-components";
+import React, { FC, useState, useEffect } from "react";
+import styled, { css, FlattenSimpleInterpolation } from "styled-components";
 import { useObserver } from "mobx-react";
 import { LineChart, Line, XAxis, CartesianGrid, Tooltip } from "recharts";
 
@@ -7,10 +7,23 @@ import useStore from "../hooks/useStore";
 
 import WeatherIcon from "./WeatherIcon";
 
-const ForecastContainer = styled.div`
+interface IForecastContainerProps {
+  expand?: boolean;
+}
+const ForecastContainer = styled.div<IForecastContainerProps>`
+  overflow: hidden;
   width: 100%;
-  min-height: 180px;
   border-top: 1px solid #e1e1e1;
+  transition: height 0.2s linear;
+
+  ${({ expand }): FlattenSimpleInterpolation =>
+    expand
+      ? css`
+          height: 230px;
+        `
+      : css`
+          height: 0;
+        `}
 `;
 
 const WeatherIconWrapper = styled.div`
@@ -24,6 +37,7 @@ const useForecastData = () => {
   const { weatherStore } = useStore();
 
   return useObserver(() => ({
+    weatherOption: weatherStore.weatherOption,
     categories: weatherStore.categories,
     rainProbData: weatherStore.rainProbData,
     humidityData: weatherStore.humidityData,
@@ -70,10 +84,13 @@ const CustomizedAxisTick = (props: XAxisProps): JSX.Element => {
 };
 
 interface IForecastProps {
-  option: string;
+  isOpenForecast?: boolean;
+  handleTransitionEnd: () => void;
 }
-const Forecast: FC<IForecastProps> = ({ option }) => {
+const Forecast: FC<IForecastProps> = ({ isOpenForecast, handleTransitionEnd }) => {
+  const [expand, setExpand] = useState<boolean>(false);
   const {
+    weatherOption,
     categories,
     rainProbData,
     humidityData,
@@ -86,20 +103,20 @@ const Forecast: FC<IForecastProps> = ({ option }) => {
     tomorrowCondition,
   } = useForecastData();
 
-  const categoryList = option === "tomorrow" ? tomorrowCategories : categories;
-  const conditionList = option === "tomorrow" ? tomorrowCondition : condition;
-  const forecastLineColor = option === "temp" ? "#2ECC40" : option === "rain" ? "#0074D9" : "#AAAAAA";
+  const categoryList = weatherOption === "tomorrow" ? tomorrowCategories : categories;
+  const conditionList = weatherOption === "tomorrow" ? tomorrowCondition : condition;
+  const forecastLineColor = weatherOption === "temp" ? "#2ECC40" : weatherOption === "rain" ? "#0074D9" : "#AAAAAA";
 
   const forecastData = categoryList.map((hour: string, index: number) => {
     const data: { name: string; value?: number; temp?: number; rain?: number; humid?: number } = { name: hour };
 
-    if (option === "tomorrow") {
+    if (weatherOption === "tomorrow") {
       data.temp = tomorrowTempData[index];
       data.rain = tomorrowRainProbData[index];
       data.humid = tomorrowHumidityData[index];
-    } else if (option === "rain") {
+    } else if (weatherOption === "rain") {
       data.value = rainProbData[index];
-    } else if (option === "humid") {
+    } else if (weatherOption === "humid") {
       data.value = humidityData[index];
     } else {
       data.value = tempData[index];
@@ -108,23 +125,33 @@ const Forecast: FC<IForecastProps> = ({ option }) => {
     return data;
   });
 
+  useEffect(() => {
+    if (isOpenForecast) {
+      setTimeout(() => {
+        setExpand(true);
+      }, 200);
+    } else {
+      setExpand(false);
+    }
+  }, [isOpenForecast]);
+
   return (
-    <ForecastContainer>
+    <ForecastContainer expand={expand} onTransitionEnd={handleTransitionEnd}>
       <LineChart width={500} height={180} data={forecastData} margin={{ top: 24, right: 24, left: 24 }}>
         <XAxis dataKey="name" axisLine={false} tick={<CustomizedAxisTick />} />
         <CartesianGrid strokeDasharray="3 3" />
         <Tooltip />
 
-        {option === "tomorrow" && (
+        {weatherOption === "tomorrow" && (
           <Line type="monotone" dataKey="temp" stroke="#2ECC40" activeDot={{ r: 8 }} animationDuration={500} />
         )}
-        {option === "tomorrow" && (
+        {weatherOption === "tomorrow" && (
           <Line type="monotone" dataKey="rain" stroke="#0074D9" activeDot={{ r: 8 }} animationDuration={500} />
         )}
-        {option === "tomorrow" && (
+        {weatherOption === "tomorrow" && (
           <Line type="monotone" dataKey="humid" stroke="#AAAAAA" activeDot={{ r: 8 }} animationDuration={500} />
         )}
-        {option !== "tomorrow" && (
+        {weatherOption !== "tomorrow" && (
           <Line
             type="monotone"
             dataKey="value"
