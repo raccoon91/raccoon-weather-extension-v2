@@ -19,6 +19,8 @@ interface IWeatherIconContainerProps {
   size?: string;
 }
 const WeatherIconContainer = styled.div<IWeatherIconContainerProps>`
+  width: ${({ size }): string => size || "64px"};
+  height: ${({ size }): string => size || "64px"};
   transform: scale(1.5);
   pointer-events: none;
 
