@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import styled from "styled-components";
 
-import CurrentWeather from "./components/CurrentWeather";
+import Weather from "./components/Weather";
 
 const AppContainer = styled.div`
   width: 500px;
@@ -11,7 +11,7 @@ const AppContainer = styled.div`
 const App: FC = () => {
   return (
     <AppContainer>
-      <CurrentWeather />
+      <Weather />
     </AppContainer>
   );
 };

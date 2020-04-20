@@ -1,11 +1,13 @@
 import React, { FC, useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { css, FlattenSimpleInterpolation } from "styled-components";
 import { useObserver } from "mobx-react";
 
 import useStore from "../hooks/useStore";
 
 import WeatherIcon from "./WeatherIcon";
 import Forecast from "./Forecast";
+
+import { ReactComponent as AngleUp } from "../images/angle-up.svg";
 
 const CurrentWeatherContainer = styled.div``;
 
@@ -55,9 +57,11 @@ const Text = styled.span<ITextProps>`
   font-size: ${({ size }): string => size || "18px"};
   font-weight: ${({ weight }): string => weight || "400"};
   line-height: ${({ size }): string => size || "18px"};
+  user-select: none;
 `;
 
 const WeatherOptionWrapper = styled.div`
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -75,12 +79,36 @@ const WeatherOptionText = styled(Text)<IWeatherOptionTextProps>`
   color: ${({ selected }): string => (selected ? "black" : "darkgray")};
 `;
 
+interface IAngleUpIconProps {
+  open?: boolean;
+}
+const AngleUpIcon = styled(AngleUp)<IAngleUpIconProps>`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  margin-top: -9px;
+  margin-left: -9px;
+  transition: transform 0.2s linear;
+
+  ${({ open }): FlattenSimpleInterpolation =>
+    open
+      ? css`
+          cursor: pointer;
+        `
+      : css`
+          transform: rotate(180deg);
+          fill: #e1e1e1;
+        `}
+`;
+
 const useCurrentWeatherData = () => {
   const { weatherStore } = useStore();
 
   return useObserver(() => ({
-    getCurrentWeather: weatherStore.getCurrentWeather,
-    getForecast: weatherStore.getForecast,
+    isOpenForecast: weatherStore.isOpenForecast,
+    weatherOption: weatherStore.weatherOption,
     city: weatherStore.city,
     temp: weatherStore.temp,
     yesterdayTemp: weatherStore.yesterdayTemp,
@@ -94,12 +122,15 @@ const useCurrentWeatherData = () => {
     r2: weatherStore.r2,
     r3: weatherStore.r3,
     hour: weatherStore.hour,
+    setWeatherOption: weatherStore.setWeatherOption,
+    getCurrentWeather: weatherStore.getCurrentWeather,
   }));
 };
 
 const CurrentWeather: FC = () => {
+  const [isOpenForecast, setIsOpenForecast] = useState<boolean>(false);
   const {
-    getCurrentWeather,
+    weatherOption,
     city,
     temp,
     yesterdayTemp,
@@ -113,8 +144,9 @@ const CurrentWeather: FC = () => {
     r2,
     r3,
     hour,
+    getCurrentWeather,
+    setWeatherOption,
   } = useCurrentWeatherData();
-  const [weatherOption, setWeatherOption] = useState<string | null>(null);
 
   useEffect(() => {
     getCurrentWeather();
@@ -123,7 +155,27 @@ const CurrentWeather: FC = () => {
   const handleSelectWeatherOption = (e: React.SyntheticEvent<HTMLElement, MouseEvent>): void => {
     const { value } = e.currentTarget.dataset;
 
-    setWeatherOption(value || null);
+    if (value) {
+      setWeatherOption(value || null);
+      setIsOpenForecast(true);
+
+      if (value === weatherOption) {
+        setIsOpenForecast(false);
+      }
+    }
+  };
+
+  const onClickCloseForecast = () => {
+    if (weatherOption && isOpenForecast) {
+      setIsOpenForecast(false);
+    }
+  };
+
+  const handleTransitionEnd = () => {
+    if (weatherOption && !isOpenForecast) {
+      setWeatherOption(null);
+      setIsOpenForecast(false);
+    }
   };
 
   return (
@@ -201,6 +253,7 @@ const CurrentWeather: FC = () => {
         >
           내일
         </WeatherOptionText>
+        <AngleUpIcon open={weatherOption !== null} onClick={onClickCloseForecast} />
         <Row>
           <WeatherOptionText
             data-value="temp"
@@ -227,8 +280,7 @@ const CurrentWeather: FC = () => {
           </WeatherOptionText>
         </Row>
       </WeatherOptionWrapper>
-
-      {weatherOption && <Forecast option={weatherOption} />}
+      {weatherOption && <Forecast isOpenForecast={isOpenForecast} handleTransitionEnd={handleTransitionEnd} />}
     </CurrentWeatherContainer>
   );
 };
