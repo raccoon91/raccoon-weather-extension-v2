@@ -76,7 +76,15 @@ interface IWeatherOptionTextProps {
 const WeatherOptionText = styled(Text)<IWeatherOptionTextProps>`
   cursor: pointer;
 
-  color: ${({ selected }): string => (selected ? "black" : "darkgray")};
+  ${({ selected }): FlattenSimpleInterpolation =>
+    selected
+      ? css`
+          color: black;
+          font-weight: 700;
+        `
+      : css`
+          color: darkgray;
+        `};
 `;
 
 interface IAngleUpIconProps {

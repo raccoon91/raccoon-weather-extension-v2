@@ -71,13 +71,19 @@ interface XAxisProps {
   };
 }
 
+const tooltipDictionary: { [key: string]: { name: string; unit: string } } = {
+  temp: { name: "온도", unit: "°C" },
+  rain: { name: "강수 확률", unit: "%" },
+  humid: { name: "습도", unit: "%" },
+};
+
 const CustomizedAxisTick = (props: XAxisProps): JSX.Element => {
   const { x, y, payload } = props;
 
   return (
     <g transform={`translate(${x},${y})`}>
       <text x={16} y={0} dy={16} textAnchor="end" fill="#666">
-        {payload && payload.value}시
+        {payload && payload.value}
       </text>
     </g>
   );
@@ -108,18 +114,18 @@ const Forecast: FC<IForecastProps> = ({ isOpenForecast, handleTransitionEnd }) =
   const forecastLineColor = weatherOption === "temp" ? "#2ECC40" : weatherOption === "rain" ? "#0074D9" : "#AAAAAA";
 
   const forecastData = categoryList.map((hour: string, index: number) => {
-    const data: { name: string; value?: number; temp?: number; rain?: number; humid?: number } = { name: hour };
+    const data: { name: string; value?: number; temp?: number; rain?: number; humid?: number } = { name: `${hour}시` };
 
     if (weatherOption === "tomorrow") {
       data.temp = tomorrowTempData[index];
       data.rain = tomorrowRainProbData[index];
       data.humid = tomorrowHumidityData[index];
     } else if (weatherOption === "rain") {
-      data.value = rainProbData[index];
+      data.rain = rainProbData[index];
     } else if (weatherOption === "humid") {
-      data.value = humidityData[index];
+      data.humid = humidityData[index];
     } else {
-      data.value = tempData[index];
+      data.temp = tempData[index];
     }
 
     return data;
@@ -140,22 +146,48 @@ const Forecast: FC<IForecastProps> = ({ isOpenForecast, handleTransitionEnd }) =
       <LineChart width={500} height={180} data={forecastData} margin={{ top: 24, right: 24, left: 24 }}>
         <XAxis dataKey="name" axisLine={false} tick={<CustomizedAxisTick />} />
         <CartesianGrid strokeDasharray="3 3" />
-        <Tooltip />
+        <Tooltip
+          formatter={(value, name) => {
+            return [`${value}${tooltipDictionary[name].unit}`, tooltipDictionary[name].name];
+          }}
+        />
 
         {weatherOption === "tomorrow" && (
-          <Line type="monotone" dataKey="temp" stroke="#2ECC40" activeDot={{ r: 8 }} animationDuration={500} />
+          <Line
+            type="monotone"
+            dataKey="temp"
+            stroke="#2ECC40"
+            strokeWidth={2.5}
+            activeDot={{ r: 8 }}
+            animationDuration={500}
+          />
         )}
         {weatherOption === "tomorrow" && (
-          <Line type="monotone" dataKey="rain" stroke="#0074D9" activeDot={{ r: 8 }} animationDuration={500} />
+          <Line
+            type="monotone"
+            dataKey="rain"
+            stroke="#0074D9"
+            strokeWidth={2.5}
+            activeDot={{ r: 8 }}
+            animationDuration={500}
+          />
         )}
         {weatherOption === "tomorrow" && (
-          <Line type="monotone" dataKey="humid" stroke="#AAAAAA" activeDot={{ r: 8 }} animationDuration={500} />
+          <Line
+            type="monotone"
+            dataKey="humid"
+            stroke="#AAAAAA"
+            strokeWidth={2.5}
+            activeDot={{ r: 8 }}
+            animationDuration={500}
+          />
         )}
         {weatherOption !== "tomorrow" && (
           <Line
             type="monotone"
-            dataKey="value"
+            dataKey={weatherOption}
             stroke={forecastLineColor}
+            strokeWidth={2.5}
             activeDot={{ r: 8 }}
             animationDuration={500}
           />
