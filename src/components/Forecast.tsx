@@ -3,9 +3,9 @@ import styled, { css, FlattenSimpleInterpolation } from "styled-components";
 import { useObserver } from "mobx-react";
 import { LineChart, Line, XAxis, CartesianGrid, Tooltip } from "recharts";
 
-import useStore from "../hooks/useStore";
+import useStore from "hooks/useStore";
 
-import WeatherIcon from "./WeatherIcon";
+import WeatherIcon from "components/WeatherIcon";
 
 interface IForecastContainerProps {
   expand?: boolean;

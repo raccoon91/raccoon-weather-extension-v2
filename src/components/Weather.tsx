@@ -2,12 +2,14 @@ import React, { FC, useEffect, useState } from "react";
 import styled, { css, FlattenSimpleInterpolation } from "styled-components";
 import { useObserver } from "mobx-react";
 
-import useStore from "../hooks/useStore";
+import useStore from "hooks/useStore";
 
-import WeatherIcon from "./WeatherIcon";
-import Forecast from "./Forecast";
+import WeatherIcon from "components/WeatherIcon";
+import Forecast from "components/Forecast";
 
-import { ReactComponent as AngleUp } from "../images/angle-up.svg";
+import calculateTemperature from "utils/calculateTemperature";
+
+import { ReactComponent as AngleUp } from "images/angle-up.svg";
 
 const CurrentWeatherContainer = styled.div``;
 
@@ -217,7 +219,7 @@ const CurrentWeather: FC = () => {
                 <Text color="gray" margin="0 8px 0 0">
                   어제보다
                 </Text>
-                <Text weight="700">{(temp - yesterdayTemp).toFixed(1)}°C</Text>
+                <Text weight="700">{calculateTemperature(temp, yesterdayTemp)}°C</Text>
               </Row>
             )}
           </Row>

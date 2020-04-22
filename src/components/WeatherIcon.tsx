@@ -1,19 +1,19 @@
 import React, { FC } from "react";
 import styled from "styled-components";
 
-import getWeatherCondition from "../utils/getWeatherCondition";
+import getWeatherCondition from "utils/getWeatherCondition";
 
-import { ReactComponent as ClearDay } from "../images/clear-day.svg";
-import { ReactComponent as ClearNight } from "../images/clear-night.svg";
-import { ReactComponent as CloudyDay } from "../images/cloudy-day.svg";
-import { ReactComponent as CloudyNight } from "../images/cloudy-night.svg";
-import { ReactComponent as Foggy } from "../images/foggy.svg";
-import { ReactComponent as RainyDay } from "../images/rainy-day.svg";
-import { ReactComponent as RainyNight } from "../images/rainy-night.svg";
-import { ReactComponent as ShowerDay } from "../images/shower-day.svg";
-import { ReactComponent as ShowerNight } from "../images/shower-night.svg";
-import { ReactComponent as SnowyDay } from "../images/snowy-day.svg";
-import { ReactComponent as SnowNight } from "../images/snowy-night.svg";
+import { ReactComponent as ClearDay } from "images/clear-day.svg";
+import { ReactComponent as ClearNight } from "images/clear-night.svg";
+import { ReactComponent as CloudyDay } from "images/cloudy-day.svg";
+import { ReactComponent as CloudyNight } from "images/cloudy-night.svg";
+import { ReactComponent as Foggy } from "images/foggy.svg";
+import { ReactComponent as RainyDay } from "images/rainy-day.svg";
+import { ReactComponent as RainyNight } from "images/rainy-night.svg";
+import { ReactComponent as ShowerDay } from "images/shower-day.svg";
+import { ReactComponent as ShowerNight } from "images/shower-night.svg";
+import { ReactComponent as SnowyDay } from "images/snowy-day.svg";
+import { ReactComponent as SnowNight } from "images/snowy-night.svg";
 
 interface IWeatherIconContainerProps {
   size?: string;
