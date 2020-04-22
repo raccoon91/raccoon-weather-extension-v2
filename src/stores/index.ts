@@ -1,7 +1,8 @@
 import { observable, action, runInAction } from "mobx";
-import publicIp from "public-ip";
-import requestWeatherServer from "../lib/requestWeatherServer";
 import { AxiosResponse } from "axios";
+import publicIp from "public-ip";
+
+import requestWeatherServer from "lib/requestWeatherServer";
 
 interface IWeather {
   city: string; // 도시
