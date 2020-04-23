@@ -56,6 +56,7 @@ class Store {
   @observable public r1: string = "";
   @observable public r2: string = "";
   @observable public r3: string = "";
+  @observable public isLoaded: boolean = false;
 
   @observable public categories: string[] = [];
   @observable public rainProbData: number[] = [];
@@ -108,6 +109,7 @@ class Store {
         this.r2 = r2;
         this.r3 = r3;
         this.hour = hour;
+        this.isLoaded = true;
       });
 
       await this.getForecast();
