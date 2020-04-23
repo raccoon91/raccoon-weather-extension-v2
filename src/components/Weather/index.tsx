@@ -49,6 +49,7 @@ const Row = styled.div<IRowProps>`
 `;
 
 interface ITextProps {
+  width?: string;
   padding?: string;
   margin?: string;
   color?: string;
@@ -56,6 +57,7 @@ interface ITextProps {
   weight?: string;
 }
 const Text = styled.span<ITextProps>`
+  width: ${({ width }): string => width || "unset"};
   height: ${({ size }): string => size || "18px"};
   padding: ${({ padding }): string | null => padding || null};
   margin: ${({ margin }): string | null => margin || null};
@@ -81,6 +83,10 @@ interface IWeatherOptionTextProps {
 }
 const WeatherOptionText = styled(Text)<IWeatherOptionTextProps>`
   cursor: pointer;
+
+  &:hover {
+    color: #57a0ee;
+  }
 
   ${({ selected }): FlattenSimpleInterpolation =>
     selected
@@ -211,7 +217,7 @@ const CurrentWeather: FC = () => {
             <WeatherIcon sky={sky} pty={pty} hour={hour} size="180px" />
             <WeatherInfoWrapper>
               <Row>
-                <Text size="36px" weight="700">
+                <Text width="80px" size="36px" weight="700">
                   {city}
                 </Text>
               </Row>
