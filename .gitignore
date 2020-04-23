@@ -10,6 +10,7 @@
 
 # production
 /build
+/raccoon-weather.zip
 
 # misc
 .DS_Store
