@@ -31,11 +31,11 @@ const Ball = styled.div<IBallProps>`
   width: 30px;
   height: 30px;
   border-radius: 25px;
-  border: 1px solid powderblue;
-  background-color: powderblue;
+  border: 1px solid #57a0ee;
+  background-color: #57a0ee;
   transform: translateY(0px) translateX(-50%) translateZ(0);
   transform-origin: center;
-  animation: bounce 1s infinite linear;
+  animation: bounce 0.7s infinite linear;
   animation-delay: ${({ delay }): string => delay};
   z-index: 2;
 
@@ -82,7 +82,7 @@ const Shadow = styled.div<IShadowProps>`
   border-radius: 50%;
   background: rgb(161, 160, 161);
   opacity: 1;
-  animation: expand 1s infinite linear;
+  animation: expand 0.7s infinite linear;
   animation-delay: ${({ delay }): string => delay};
   z-index: 1;
 
