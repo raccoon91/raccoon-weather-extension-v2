@@ -1,9 +1,14 @@
 {
-  "name": "My Extension",
+  "name": "Raccoon weather",
   "version": "1.0",
   "manifest_version": 2,
   "browser_action": {
     "default_popup": "index.html"
+  },
+  "icons": {
+    "16": "icon-16px.png",
+    "48": "icon-48px.png",
+    "128": "icon-128px.png"
   },
   "content_security_policy": "script-src 'self' 'sha256-d4503b70390349fef3be6bd9c925564b93017882c4057e9dba5f6fcce2cfc4ab'; object-src 'self'"
 }
