@@ -5,7 +5,7 @@ import { LineChart, Line, XAxis, CartesianGrid, Tooltip } from "recharts";
 
 import useStore from "hooks/useStore";
 
-import WeatherIcon from "components/WeatherIcon";
+import WeatherIcon from "components/Weather/WeatherIcon";
 
 interface IForecastContainerProps {
   expand?: boolean;

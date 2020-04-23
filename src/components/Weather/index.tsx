@@ -4,8 +4,9 @@ import { useObserver } from "mobx-react";
 
 import useStore from "hooks/useStore";
 
-import WeatherIcon from "components/WeatherIcon";
-import Forecast from "components/Forecast";
+import Forecast from "components/Weather/Forecast";
+import WeatherIcon from "components/Weather/WeatherIcon";
+import Loader from "components/Weather/Loader";
 
 import calculateTemperature from "utils/calculateTemperature";
 
@@ -23,6 +24,9 @@ const LocationWrapper = styled.div`
 
 const ContentWrapper = styled.div`
   display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 180px;
 `;
 
 const WeatherInfoWrapper = styled.div`
@@ -132,6 +136,7 @@ const useCurrentWeatherData = () => {
     r2: weatherStore.r2,
     r3: weatherStore.r3,
     hour: weatherStore.hour,
+    isLoaded: weatherStore.isLoaded,
     setWeatherOption: weatherStore.setWeatherOption,
     getCurrentWeather: weatherStore.getCurrentWeather,
   }));
@@ -154,6 +159,7 @@ const CurrentWeather: FC = () => {
     r2,
     r3,
     hour,
+    isLoaded,
     getCurrentWeather,
     setWeatherOption,
   } = useCurrentWeatherData();
@@ -200,60 +206,66 @@ const CurrentWeather: FC = () => {
         <Text weight="700">{r3}</Text>
       </LocationWrapper>
       <ContentWrapper>
-        <WeatherIcon sky={sky} pty={pty} hour={hour} size="180px" />
-        <WeatherInfoWrapper>
-          <Row>
-            <Text size="36px" weight="700">
-              {city}
-            </Text>
-          </Row>
-          <Row marginTop="10px">
-            <Text color="gray" margin="0 8px 0 0">
-              기온
-            </Text>
-            <Text margin="0 10px 0 0" weight="700">
-              {temp}°C
-            </Text>
-            {temp && yesterdayTemp && (
+        {isLoaded ? (
+          <>
+            <WeatherIcon sky={sky} pty={pty} hour={hour} size="180px" />
+            <WeatherInfoWrapper>
               <Row>
-                <Text color="gray" margin="0 8px 0 0">
-                  어제보다
+                <Text size="36px" weight="700">
+                  {city}
                 </Text>
-                <Text weight="700">{calculateTemperature(temp, yesterdayTemp)}°C</Text>
               </Row>
-            )}
-          </Row>
-          <Row marginTop="8px">
-            <Text color="gray" margin="0 8px 0 0">
-              강수 확률
-            </Text>
-            <Text margin="0 10px 0 0" weight="700">
-              {pop}%
-            </Text>
-            <Text color="gray" margin="0 8px 0 0">
-              강수량
-            </Text>
-            <Text weight="700">{rn1}mm</Text>
-          </Row>
-          <Row marginTop="8px">
-            <Text color="gray" margin="0 8px 0 0">
-              습도
-            </Text>
-            <Text weight="700">{humidity}%</Text>
-          </Row>
-          <Row marginTop="8px">
-            <Text color="gray" margin="0 8px 0 0">
-              미세먼지
-            </Text>
-            <Text margin="0 10px 0 0" weight="700">
-              {pm10}pm
-            </Text>
-            <Text color="gray" margin="0 8px 0 0">
-              초미세먼지
-            </Text>
-            <Text weight="700">{pm25}pm</Text>
-          </Row>
-        </WeatherInfoWrapper>
+              <Row marginTop="10px">
+                <Text color="gray" margin="0 8px 0 0">
+                  기온
+                </Text>
+                <Text margin="0 10px 0 0" weight="700">
+                  {temp}°C
+                </Text>
+                {temp && yesterdayTemp && (
+                  <Row>
+                    <Text color="gray" margin="0 8px 0 0">
+                      어제보다
+                    </Text>
+                    <Text weight="700">{calculateTemperature(temp, yesterdayTemp)}°C</Text>
+                  </Row>
+                )}
+              </Row>
+              <Row marginTop="8px">
+                <Text color="gray" margin="0 8px 0 0">
+                  강수 확률
+                </Text>
+                <Text margin="0 10px 0 0" weight="700">
+                  {pop}%
+                </Text>
+                <Text color="gray" margin="0 8px 0 0">
+                  강수량
+                </Text>
+                <Text weight="700">{rn1}mm</Text>
+              </Row>
+              <Row marginTop="8px">
+                <Text color="gray" margin="0 8px 0 0">
+                  습도
+                </Text>
+                <Text weight="700">{humidity}%</Text>
+              </Row>
+              <Row marginTop="8px">
+                <Text color="gray" margin="0 8px 0 0">
+                  미세먼지
+                </Text>
+                <Text margin="0 10px 0 0" weight="700">
+                  {pm10}pm
+                </Text>
+                <Text color="gray" margin="0 8px 0 0">
+                  초미세먼지
+                </Text>
+                <Text weight="700">{pm25}pm</Text>
+              </Row>
+            </WeatherInfoWrapper>
+          </>
+        ) : (
+          <Loader />
+        )}
       </ContentWrapper>
       <WeatherOptionWrapper>
         <WeatherOptionText
