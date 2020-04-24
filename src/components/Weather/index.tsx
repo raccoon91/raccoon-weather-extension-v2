@@ -7,10 +7,11 @@ import useStore from "hooks/useStore";
 import Forecast from "components/Weather/Forecast";
 import WeatherIcon from "components/Weather/WeatherIcon";
 import Loader from "components/Weather/Loader";
+import AirPollution from "components/Weather/AirPollution";
 
 import calculateTemperature from "utils/calculateTemperature";
 
-import { ReactComponent as AngleUp } from "images/angle-up.svg";
+import { ReactComponent as AngleUp } from "images/symbol/angle-up.svg";
 
 const CurrentWeatherContainer = styled.div``;
 
@@ -256,16 +257,14 @@ const CurrentWeather: FC = () => {
                 <Text weight="700">{humidity}%</Text>
               </Row>
               <Row marginTop="8px">
-                <Text color="gray" margin="0 8px 0 0">
+                <Text color="gray" margin="0 5px 0 0">
                   미세먼지
                 </Text>
-                <Text margin="0 10px 0 0" weight="700">
-                  {pm10}pm
-                </Text>
-                <Text color="gray" margin="0 8px 0 0">
+                <AirPollution category="pm10" amount={pm10} />
+                <Text color="gray" margin="0 5px 0 8px">
                   초미세먼지
                 </Text>
-                <Text weight="700">{pm25}pm</Text>
+                <AirPollution category="pm25" amount={pm25} />
               </Row>
             </WeatherInfoWrapper>
           </>
