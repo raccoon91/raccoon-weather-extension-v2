@@ -3,17 +3,17 @@ import styled from "styled-components";
 
 import getWeatherCondition from "utils/getWeatherCondition";
 
-import { ReactComponent as ClearDay } from "images/clear-day.svg";
-import { ReactComponent as ClearNight } from "images/clear-night.svg";
-import { ReactComponent as CloudyDay } from "images/cloudy-day.svg";
-import { ReactComponent as CloudyNight } from "images/cloudy-night.svg";
-import { ReactComponent as Foggy } from "images/foggy.svg";
-import { ReactComponent as RainyDay } from "images/rainy-day.svg";
-import { ReactComponent as RainyNight } from "images/rainy-night.svg";
-import { ReactComponent as ShowerDay } from "images/shower-day.svg";
-import { ReactComponent as ShowerNight } from "images/shower-night.svg";
-import { ReactComponent as SnowyDay } from "images/snowy-day.svg";
-import { ReactComponent as SnowNight } from "images/snowy-night.svg";
+import { ReactComponent as ClearDay } from "images/weather/clear-day.svg";
+import { ReactComponent as ClearNight } from "images/weather/clear-night.svg";
+import { ReactComponent as CloudyDay } from "images/weather/cloudy-day.svg";
+import { ReactComponent as CloudyNight } from "images/weather/cloudy-night.svg";
+import { ReactComponent as Foggy } from "images/weather/foggy.svg";
+import { ReactComponent as RainyDay } from "images/weather/rainy-day.svg";
+import { ReactComponent as RainyNight } from "images/weather/rainy-night.svg";
+import { ReactComponent as ShowerDay } from "images/weather/shower-day.svg";
+import { ReactComponent as ShowerNight } from "images/weather/shower-night.svg";
+import { ReactComponent as SnowyDay } from "images/weather/snowy-day.svg";
+import { ReactComponent as SnowNight } from "images/weather/snowy-night.svg";
 
 interface IWeatherIconContainerProps {
   size?: string;
@@ -37,7 +37,7 @@ interface IWeatherIconProps {
   size?: string;
 }
 const WeatherIcon: FC<IWeatherIconProps> = ({ sky, pty, hour, size }) => {
-  const weatherCondition = getWeatherCondition(sky, pty, hour);
+  const weatherCondition = getWeatherCondition(sky, pty, Number(hour));
 
   return (
     <WeatherIconContainer size={size}>

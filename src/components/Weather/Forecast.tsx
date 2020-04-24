@@ -197,7 +197,7 @@ const Forecast: FC<IForecastProps> = ({ isOpenForecast, handleTransitionEnd }) =
         {conditionList.map((condition: number[], index: number) => {
           const [sky, pty] = condition;
 
-          return <WeatherIcon key={index} sky={sky} pty={pty} hour={categories[index]} size="48px" />;
+          return <WeatherIcon key={index} sky={sky} pty={pty} hour={categoryList[index]} size="48px" />;
         })}
       </WeatherIconWrapper>
     </ForecastContainer>
