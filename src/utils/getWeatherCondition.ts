@@ -1,5 +1,5 @@
-const getWeatherCondition = (sky: number, pty: number, hour: string): string => {
-  const hourCondition = Number(hour) <= 6 && Number(hour) < 18 ? "day" : "night";
+const getWeatherCondition = (sky: number, pty: number, hour: number): string => {
+  const hourCondition = hour >= 6 && hour < 18 ? "day" : "night";
 
   if (sky + pty === 0) return "";
 
