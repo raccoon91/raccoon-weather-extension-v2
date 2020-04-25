@@ -1,44 +1,51 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Raccoon Weather
 
-## Available Scripts
+<a href="https://chrome.google.com/webstore/detail/raccoon-weather/lkjiceiccfaeddfhodmclmicchaagcno" target="_blank">Raccon Weather</a>
 
-In the project directory, you can run:
+<a href="https://github.com/raccoon91/raccoon-weather-server" target="_blank">raccoon-weather-server</a>
 
-### `yarn start`
+### Introduction
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- React를 이용한 Chrome Extension
+- 사용자의 ip 주소를 이용해 위치를 판별하고 해당 시, 도의 날씨, 예보를 보여주는 크롬 익스텐션
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+<img src="image_1.png" alt="drawing" width="300"/>
+<img src="image_2.png" alt="drawing" width="300"/>
+<img src="image_3.png" alt="drawing" width="300"/>
 
-### `yarn test`
+### Features
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- WIFI IP 주소를 이용해 사용자의 위치 판별
+- redis를 이용한 날씨, IP 데이터 캐싱
+- 일정 시간마다 시, 도별 날씨 및 예보 저장
+- 그래프를 이용한 시간대별 예보 정보
 
-### `yarn build`
+### Installation
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+git clone https://github.com/raccoon91/raccoon-weather-extension-v2.git
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+cd raccoon-weather-extension-v2
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+yarn install
 
-### `yarn eject`
+yarn start // localhost:3000
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Tech
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+#### Front
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+- Typescript
+- React, Mobx
+- recharts.js
+- styled-components
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+#### Back
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Typescript
+- Express.js
+- AWS EC2
+- Mysql(sequelize), Redis
+- node-cron
+- Naver Geolocation API
