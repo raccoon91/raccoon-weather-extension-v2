@@ -9,9 +9,11 @@
 - React를 이용한 Chrome Extension
 - 사용자의 ip 주소를 이용해 위치를 판별하고 해당 시, 도의 날씨, 예보를 보여주는 크롬 익스텐션
 
-<img src="image_1.png" alt="drawing" width="300"/>
-<img src="image_2.png" alt="drawing" width="300"/>
-<img src="image_3.png" alt="drawing" width="300"/>
+<div style="display: flex;">
+  <img src="image_1.png" alt="drawing" width="300"/>
+  <img src="image_2.png" alt="drawing" width="300"/>
+  <img src="image_3.png" alt="drawing" width="300"/>
+</div>
 
 ### Features
 
