@@ -1,6 +1,6 @@
 # Raccoon Weather
 
-<a href="https://chrome.google.com/webstore/detail/raccoon-weather/lkjiceiccfaeddfhodmclmicchaagcno" target="_blank">Raccon Weather</a>
+<a href="https://chrome.google.com/webstore/detail/raccoon-weather/lkjiceiccfaeddfhodmclmicchaagcno" target="_blank">크롬 웹 스토어 - Raccon Weather</a>
 
 <a href="https://github.com/raccoon91/raccoon-weather-server" target="_blank">raccoon-weather-server</a>
 
